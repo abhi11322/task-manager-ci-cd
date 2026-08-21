@@ -13,6 +13,8 @@ def get_tasks():
 def create_task():
     global next_id
     data = request.get_json()
+    if not data.get('title'):
+        return jsonify({"error": "Title is required"}), 400
     new_task = {
         'id': next_id,
         'title': data.get('title'),

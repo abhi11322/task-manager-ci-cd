@@ -26,3 +26,12 @@ def test_create_task(client):
     assert response.status_code == 201
     assert response.json["title"] == "Learn CI/CD"
     assert response.json["done"] is False
+    
+def test_create_task_without_title(client):
+    response = client.post(
+        "/tasks",
+        json={"description": "This should fail"}
+    )
+
+    assert response.status_code == 400
+    assert response.json["error"] == "Title is required"
