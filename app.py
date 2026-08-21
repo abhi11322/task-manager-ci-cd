@@ -1,0 +1,45 @@
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+tasks = []
+next_id = 1
+
+@app.route('/tasks', methods=['GET'])
+def get_tasks():
+    return jsonify(tasks)
+
+@app.route('/tasks', methods=['POST'])
+def create_task():
+    global next_id
+    data = request.get_json()
+    new_task = {
+        'id': next_id,
+        'title': data.get('title'),
+        'description': data.get('description'),
+        'done': False
+    }
+    tasks.append(new_task)
+    next_id += 1
+    return jsonify(new_task), 201
+
+@app.route("/tasks/<int:task_id>/complete", methods=["PUT"])
+def complete_task(task_id):
+    for task in tasks:
+        if task["id"] == task_id:
+            task["completed"] = True
+            return jsonify(task)
+
+    return jsonify({"error": "Task not found"}), 404
+
+@app.route("/tasks/<int:task_id>", methods=["DELETE"])
+def delete_task(task_id):
+    for task in tasks:
+        if task["id"] == task_id:
+            tasks.remove(task)
+            return jsonify({"message": "Task deleted"})
+
+    return jsonify({"error": "Task not found"}), 404
+
+if __name__ == '__main__':
+    app.run(debug=True)
