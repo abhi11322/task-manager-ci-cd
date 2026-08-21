@@ -23,6 +23,6 @@ def test_create_task(client):
         json={"title": "Learn CI/CD"}
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     assert response.json["title"] == "Learn CI/CD"
     assert response.json["done"] is False
