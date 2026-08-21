@@ -29,7 +29,7 @@ def create_task():
 def complete_task(task_id):
     for task in tasks:
         if task["id"] == task_id:
-            task["completed"] = True
+            task["done"] = True
             return jsonify(task)
 
     return jsonify({"error": "Task not found"}), 404
